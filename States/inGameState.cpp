@@ -1,9 +1,12 @@
-#include <cstdio>
 #include "inGameState.h"
 
 inGameState::inGameState(engine* gEngine)
 {
 	imageCounter = 0;
+	currentImage = 0;
+
+	clearCounter = 0;
+    currentTime = 0; // 3 seconds for each piece
 	init(gEngine);
 }
 
@@ -11,13 +14,44 @@ void inGameState::init(engine* gEngine)
 {
 	getImages();
 	string file = "images/";
+
+	int tilesX = 4;
+	int tilesY = 3;
+	int tileSize = 200;
+
+	bool posAssigned = false;
+	
 	for (int i = 0; i < imageCounter; ++i)
 	{
 		sprite* newImage = new sprite(file + imageFiles[i],gEngine->getRenderer());
 		imageObj[i].addComponent(newImage);
+
+		for (int x = 0; x < tilesX; ++x)
+		{
+			for (int y = 0; y < tilesY; ++y)
+			{				
+				newImage->addClip(x * tileSize, y * tileSize, tileSize, tileSize);
+				
+				if (!posAssigned)
+				{
+					clipPosition.push_back(pair<int,int>(x * tileSize + tileSize/2,y * tileSize + tileSize/2));
+				}
+			}
+		}
+
+		if (!posAssigned)
+			posAssigned = true;
+		
 		imageObj[i].x = gEngine->screenWidth() / 2;
 		imageObj[i].y = gEngine->screenHeight() / 2;
 	}
+
+	for (int i = 0; i < 11; ++i)
+	{
+		randomSequence.push_back(i);
+	}
+
+	std::random_shuffle(randomSequence.begin(),randomSequence.end());
 }
 
 void inGameState::getImages()
@@ -56,15 +90,58 @@ void inGameState::handleInput(engine* gEngine, float deltaTime)
 
 void inGameState::update(engine* gEngine, float deltaTime)
 {
-	SDL_SetRenderDrawColor(gEngine->getRenderer(),0xFF,0xFF,0xFF,0xFF);
-	SDL_RenderClear(gEngine->getRenderer());
-	
-	for (int i = 0; i < imageCounter; ++i)
+	if (clearCounter == clearTime)
 	{
-		imageObj[i].update(gEngine,deltaTime);
+		// suspend for couple mins
+		clearCounter = 0;
+		
+		SDL_SetRenderDrawColor(gEngine->getRenderer(),0x00,0x00,0x00,0x00);
+		SDL_RenderClear(gEngine->getRenderer());
+		
+		if (currentImage == 9)
+		{
+			// swap scene
+		}
+		else
+		{
+			++currentImage;
+		}
+		
+	}
+	else if (timeToReveal(deltaTime))
+	{
+		moveImage(&imageObj[currentImage]);
+		imageObj[currentImage].update(gEngine,deltaTime);
+		++clearCounter;
+	}
+		
+	SDL_RenderPresent(gEngine->getRenderer());
+}
+
+bool inGameState::timeToReveal(float deltaTime)
+{
+	currentTime += deltaTime;
+
+	if (currentTime >= revealTime)
+	{
+		currentTime = 0;
+		return true;
 	}
 
-	SDL_RenderPresent(gEngine->getRenderer());
+	return false;
+}
+
+void inGameState::moveImage(gameObject* image)
+{
+	int index = randomSequence.at(clearCounter);
+	
+	pair<int,int> pos = clipPosition.at(index);
+
+	image->x = pos.readValue1();
+	image->y = pos.readValue2();
+
+	sprite* sp = (sprite*) image->getComponent(0);
+	sp->setClip(index);
 }
 
 inGameState::~inGameState()

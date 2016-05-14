@@ -2,10 +2,15 @@
 
 #include <dirent.h>
 #include <string>
+#include <cstdio>
+#include <algorithm>
 
 #include "../GameEngine/gameState.h"
 #include "../GameEngine/gameObject.h"
 #include "../Components/sprite.h"
+
+#include "../Utils/GTimer.h"
+#include "../Utils/pair.h"
 
 using std::string;
 
@@ -27,11 +32,26 @@ public:
 	
 private:
 
+	int clearCounter;
+	const int clearTime = 12;
+	
+	bool timeToReveal(float deltaTime);
+	float currentTime;
+	const float revealTime = 3;
+
+	// runtime
+	vector<int> randomSequence;
+	vector<pair<int,int>> clipPosition;
+	void moveImage(gameObject* image);
+
+	// init
 	void getImages();
 	// directory stream
 	DIR *dir;
 	
 	struct dirent *ent;
+	
+	int currentImage;	
 
 	string imageFiles[10];
 	int imageCounter;
