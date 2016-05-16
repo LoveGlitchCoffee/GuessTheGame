@@ -14,7 +14,7 @@ void inGameState::init(engine* gEngine)
 {
 	resetAll();
 		
-	getImages();   
+	getImages();
 
 	int tilesX = 4;
 	int tilesY = 3;
@@ -25,7 +25,7 @@ void inGameState::init(engine* gEngine)
 	for (int i = 0; i < imageCounter; ++i)
 	{
 		gameObject* newObj = new gameObject();
-		sprite* newImage = new sprite(filePath + imageFiles[i],gEngine->getRenderer());
+		sprite* newImage = new sprite("images/" + filePath + "/" + imageFiles[i],gEngine->getRenderer());
 		newObj->addComponent(newImage);
 		
 		imageObj[i] = newObj;
@@ -79,8 +79,9 @@ void inGameState::resetAll()
 }
 
 void inGameState::getImages()
-{   	
-	if ((dir = opendir("./images/")) != nullptr)
+{
+	string path = "./images/" + filePath;
+	if ((dir = opendir(path.c_str())) != nullptr)
 	{
 		while ((ent = readdir(dir)) != nullptr)
 		{

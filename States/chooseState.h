@@ -6,6 +6,7 @@
 #include "../GameEngine/gameObject.h"
 #include "../Components/sprite.h"
 #include "../Components/button.h"
+#include "../Components/textSprite.h"
 
 class chooseState : public gameState
 {
@@ -21,14 +22,28 @@ public:
 	void handleInput(engine* gEngine, float deltaTime);
 
 	void update(engine* gEngine, float deltaTime);
+
+	string getFolderName();
 	
 private:
-
-	static void choseFolder1(engine* gEngine);
-
+   
 	static void hoverOver(button* folder);
-	
-	gameObject folder1;
+
+
+	TTF_Font* font;
+	SDL_Color col = {0,0,0,255};
+
+	gameObject rogueText;
+	gameObject rogue;
+	static void chosenRogue(engine* gEngine);
+
+	gameObject rpgText;
+	gameObject rpgs;
+	static void chosenRPG(engine* gEngine);
+
+	gameObject stealthText;
+	gameObject stealth;
+	static void chosenStealth(engine* gEngine);
 
 	bool canUpdate;
 	
