@@ -36,7 +36,8 @@ void endGameState::handleInput(engine* gEngine, float deltaTime)
 	while (SDL_PollEvent(gEngine->event()) != 0)
 	{		
 		if (gEngine->event()->type == SDL_QUIT)
-		{		
+		{
+			close();
 			gEngine->stopGame();
 		}
 	}
@@ -60,5 +61,5 @@ endGameState::~endGameState()
 
 void endGameState::close()
 {
-	
+	TTF_CloseFont(endFont);
 }

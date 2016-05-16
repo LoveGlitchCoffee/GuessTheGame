@@ -128,7 +128,6 @@ void inGameState::handleInput(engine* gEngine, float deltaTime)
 				SDL_RenderClear(gEngine->getRenderer());
 			   	   
 				++currentImage;
-				printf("current image %d\n", currentImage);
 			}
 			break;
 
@@ -178,17 +177,25 @@ void inGameState::update(engine* gEngine, float deltaTime)
 		
 		if (clearCounter == clearTime)
 		{
-			printf("failed this one\n");
-			pointLeft = 12;
+			if (currentWait < waitTime)
+			{
+				currentWait += deltaTime;
+			}
+			else
+			{
+				currentWait = 0;
+
+				printf("failed this one\n");
+				pointLeft = 12;
 			
-			clearCounter = 0;
-			currentTime = 0;
+				clearCounter = 0;
+				currentTime = 0;			
 		
-			SDL_SetRenderDrawColor(gEngine->getRenderer(),0x00,0x00,0x00,0x00);
-			SDL_RenderClear(gEngine->getRenderer());
+				SDL_SetRenderDrawColor(gEngine->getRenderer(),0x00,0x00,0x00,0x00);
+				SDL_RenderClear(gEngine->getRenderer());
 			
-			++currentImage;
-			printf("image auto update to %d\n",currentImage);
+				++currentImage;
+			}						
 		}
 		else if (timeToReveal(deltaTime) && clearCounter < clearTime)
 		{
@@ -230,15 +237,13 @@ void inGameState::moveImage(gameObject* image)
 
 inGameState::~inGameState()
 {
-	for (int i = 0; i < 10; ++i)
-	{
-		delete imageObj[i];
-	}
-
 	close();
 }
 
 void inGameState::close()
 {
-	
+	for (int i = 0; i < 10; ++i)
+	{
+		delete imageObj[i];
+	}
 }

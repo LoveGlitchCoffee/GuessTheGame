@@ -40,6 +40,9 @@ private:
 
 	int clearCounter;
 	const int clearTime = 12;
+
+	float currentWait = 0;
+	const float waitTime = 2;
 	
 	bool timeToReveal(float deltaTime);
 	float currentTime;

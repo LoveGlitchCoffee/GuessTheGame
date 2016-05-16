@@ -58,5 +58,5 @@ menuState::~menuState()
 
 void menuState::close()
 {
-	
+	TTF_CloseFont(font);
 }
