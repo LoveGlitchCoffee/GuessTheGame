@@ -20,8 +20,8 @@ void endGameState::init(engine* gEngine)
 	finText.y = gEngine->screenHeight() / 3;
 
 	resText.addComponent(resButton);
-	resText.x = gEngine->screenWidth()/1;
-	resText.y = gEngine->screenWidth()/3 * 2;
+	resText.x = gEngine->screenWidth() / 2;
+	resText.y = gEngine->screenWidth() / 3 * 2;
 }
 
 void endGameState::restart(engine* gEngine)

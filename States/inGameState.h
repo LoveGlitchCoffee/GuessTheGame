@@ -66,5 +66,5 @@ private:
 
 	string imageFiles[10];
 	int imageCounter;
-	gameObject imageObj[10];
+	gameObject* imageObj[10];
 };

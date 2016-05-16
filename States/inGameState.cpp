@@ -12,7 +12,6 @@ void inGameState::setPath(string path)
 
 void inGameState::init(engine* gEngine)	
 {
-
 	resetAll();
 		
 	getImages();   
@@ -25,9 +24,12 @@ void inGameState::init(engine* gEngine)
 
 	for (int i = 0; i < imageCounter; ++i)
 	{
+		gameObject* newObj = new gameObject();
 		sprite* newImage = new sprite(filePath + imageFiles[i],gEngine->getRenderer());
-		imageObj[i].addComponent(newImage);
-
+		newObj->addComponent(newImage);
+		
+		imageObj[i] = newObj;
+		
 		for (int x = 0; x < tilesX; ++x)
 		{
 			for (int y = 0; y < tilesY; ++y)
@@ -44,11 +46,11 @@ void inGameState::init(engine* gEngine)
 		if (!posAssigned)
 			posAssigned = true;
 		
-		imageObj[i].x = gEngine->screenWidth() / 2;
-		imageObj[i].y = gEngine->screenHeight() / 2;
+		imageObj[i]->x = gEngine->screenWidth() / 2;
+		imageObj[i]->y = gEngine->screenHeight() / 2;
 	}
 
-	for (int i = 0; i < 11; ++i)
+	for (int i = 0; i < 12; ++i)
 	{
 		randomSequence.push_back(i);
 	}
@@ -70,7 +72,10 @@ void inGameState::resetAll()
 	randomSequence.clear();
 	clipPosition.clear();
 
-	// forget the arrays, its a hack after all
+	for (int i = 0; i < imageCounter; ++i)
+	{
+		delete imageObj[i];
+	}
 }
 
 void inGameState::getImages()
@@ -171,11 +176,11 @@ void inGameState::update(engine* gEngine, float deltaTime)
 	else
 	{
 		
-		if (clearCounter == clearTime - 1)
+		if (clearCounter == clearTime)
 		{
 			printf("failed this one\n");
 			pointLeft = 12;
-			// also reset clip
+			
 			clearCounter = 0;
 			currentTime = 0;
 		
@@ -185,11 +190,11 @@ void inGameState::update(engine* gEngine, float deltaTime)
 			++currentImage;
 			printf("image auto update to %d\n",currentImage);
 		}
-		else if (timeToReveal(deltaTime))
-		{			
-			moveImage(&imageObj[currentImage]);
-			imageObj[currentImage].update(gEngine,deltaTime);
-			++clearCounter;
+		else if (timeToReveal(deltaTime) && clearCounter < clearTime)
+		{
+			moveImage(imageObj[currentImage]);
+			imageObj[currentImage]->update(gEngine,deltaTime);
+			++clearCounter;			
 			--pointLeft;		
 		}
 	}
@@ -225,7 +230,12 @@ void inGameState::moveImage(gameObject* image)
 
 inGameState::~inGameState()
 {
-	
+	for (int i = 0; i < 10; ++i)
+	{
+		delete imageObj[i];
+	}
+
+	close();
 }
 
 void inGameState::close()
