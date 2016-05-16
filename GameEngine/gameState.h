@@ -3,8 +3,9 @@
 enum gState
 {
 	menu = 0,
-	inGame = 1,
-	endGame = 2
+	chooseFolder = 1,
+	inGame = 2,
+	endGame = 3
 };
 
 class engine;

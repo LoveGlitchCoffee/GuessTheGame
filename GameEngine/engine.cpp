@@ -1,6 +1,8 @@
 #include "engine.h"
 #include "../States/menuState.h"
+#include "../States/chooseState.h"
 #include "../States/inGameState.h"
+#include "../States/endGame.h"
 
 engine::engine()
 {
@@ -76,13 +78,19 @@ bool engine::init()
 			}
 
 			// initialise states
-			states.reserve(3);
+			states.reserve(4);
 			
 			menuState* menu = new menuState(this);
 			states.push_back(menu);
 
+			chooseState* choose = new chooseState(this);
+			states.push_back(choose);
+
 			inGameState* inGame = new inGameState(this);
 			states.push_back(inGame);
+
+			endGameState* endGame = new endGameState(this);
+			states.push_back(endGame);
 		}
 	}
 	
@@ -104,7 +112,7 @@ void engine::close()
 }
 
 void engine::changeGameState(gState newState)
-{
+{	
 	currentState = states[newState];
 }
 
@@ -146,4 +154,9 @@ void engine::stopGame()
 SDL_Event* engine::event()
 {
 	return &e;
+}
+
+gameState* engine::getState(int index)
+{
+	return states.at(index);
 }

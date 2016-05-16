@@ -1,3 +1,5 @@
+#pragma once
+
 #include "sprite.h"
 
 class textSprite : public sprite

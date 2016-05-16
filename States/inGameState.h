@@ -29,8 +29,14 @@ public:
 	void handleInput(engine* gEngine, float deltaTime);
 
 	void update(engine* gEngine, float deltaTime);
+
+	void setPath(string path);
+
+	bool notClearScreen;
 	
-private:
+private:	
+
+	void resetAll();
 
 	int clearCounter;
 	const int clearTime = 12;
@@ -44,6 +50,11 @@ private:
 	vector<pair<int,int>> clipPosition;
 	void moveImage(gameObject* image);
 
+	int totalPoints;
+	int pointLeft;
+
+	string filePath;
+	
 	// init
 	void getImages();
 	// directory stream

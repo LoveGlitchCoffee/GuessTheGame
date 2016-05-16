@@ -102,6 +102,8 @@ public:
 	 * 
 	 */
 	void stopGame();
+
+	gameState* getState(int index);	
 	
 private:
 

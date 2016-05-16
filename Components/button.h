@@ -58,4 +58,5 @@ private:
 	
 	int buttonWidth, buttonHeight;
 	bool mouseWithinBoundary;
+	bool clicked;
 };

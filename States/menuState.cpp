@@ -46,10 +46,9 @@ void menuState::update(engine* gEngine,float deltaTime)
 
 void menuState::startGame(engine* gEngine)
 {
-	printf("going into game\n");
 	SDL_SetRenderDrawColor(gEngine->getRenderer(),0x00,0x00,0x00,0x00);
 	SDL_RenderClear(gEngine->getRenderer());
-	gEngine->changeGameState(inGame);
+	gEngine->changeGameState(chooseFolder);
 }
 
 menuState::~menuState()

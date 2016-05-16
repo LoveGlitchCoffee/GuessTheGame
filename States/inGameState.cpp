@@ -1,29 +1,31 @@
 #include "inGameState.h"
 
 inGameState::inGameState(engine* gEngine)
-{
-	imageCounter = 0;
-	currentImage = 0;
+{		
+	notClearScreen = true;
+}
 
-	clearCounter = 0;
-    currentTime = 0; // 3 seconds for each piece
-	init(gEngine);
+void inGameState::setPath(string path)
+{
+	filePath = path;
 }
 
 void inGameState::init(engine* gEngine)	
 {
-	getImages();
-	string file = "images/";
+
+	resetAll();
+		
+	getImages();   
 
 	int tilesX = 4;
 	int tilesY = 3;
 	int tileSize = 200;
 
 	bool posAssigned = false;
-	
+
 	for (int i = 0; i < imageCounter; ++i)
 	{
-		sprite* newImage = new sprite(file + imageFiles[i],gEngine->getRenderer());
+		sprite* newImage = new sprite(filePath + imageFiles[i],gEngine->getRenderer());
 		imageObj[i].addComponent(newImage);
 
 		for (int x = 0; x < tilesX; ++x)
@@ -54,6 +56,23 @@ void inGameState::init(engine* gEngine)
 	std::random_shuffle(randomSequence.begin(),randomSequence.end());
 }
 
+void inGameState::resetAll()
+{
+	imageCounter = 0;
+	currentImage = 0;
+
+	clearCounter = 0;
+    currentTime = 0; // 3 seconds for each piece
+
+	pointLeft = 12;
+	totalPoints = 0;
+
+	randomSequence.clear();
+	clipPosition.clear();
+
+	// forget the arrays, its a hack after all
+}
+
 void inGameState::getImages()
 {   	
 	if ((dir = opendir("./images/")) != nullptr)
@@ -70,6 +89,9 @@ void inGameState::getImages()
 		}
 
 		printf("got %d images\n",imageCounter);
+
+		if (closedir(dir) < 0)
+			perror("failed closing directory\n");
 	}
 	else
 	{
@@ -85,36 +107,93 @@ void inGameState::handleInput(engine* gEngine, float deltaTime)
 		{		
 			gEngine->stopGame();
 		}
-	}	
+		else if (gEngine->event()->type == SDL_KEYDOWN)
+		{
+			switch(gEngine->event()->key.keysym.sym)
+			{
+			case SDLK_SPACE:
+			{
+				totalPoints += pointLeft;
+				pointLeft = 12;
+				// also reset clip
+				clearCounter = 0;
+				currentTime = 0;
+
+				SDL_SetRenderDrawColor(gEngine->getRenderer(),0x00,0x00,0x00,0x00);
+				SDL_RenderClear(gEngine->getRenderer());
+			   	   
+				++currentImage;
+				printf("current image %d\n", currentImage);
+			}
+			break;
+
+			case SDLK_x:
+			{
+				clearCounter = 0;
+				currentTime = 0;
+		
+				SDL_SetRenderDrawColor(gEngine->getRenderer(),0x00,0x00,0x00,0x00);
+				SDL_RenderClear(gEngine->getRenderer());
+		
+				if (currentImage == imageCounter + 1)
+				{
+					// for 1up, score at the end of all teams, adapt as needed
+					printf("final score: %d\n",totalPoints);					
+					gEngine->changeGameState(endGame);
+				}
+				else
+				{
+					printf("image %d skipped\n",currentImage);
+					++currentImage;
+				}
+			}
+			break;
+			}
+		}
+	}
 }
+
 
 void inGameState::update(engine* gEngine, float deltaTime)
 {
-	if (clearCounter == clearTime)
+	if (notClearScreen)
 	{
-		// suspend for couple mins
-		clearCounter = 0;
-		
 		SDL_SetRenderDrawColor(gEngine->getRenderer(),0x00,0x00,0x00,0x00);
 		SDL_RenderClear(gEngine->getRenderer());
-		
-		if (currentImage == 9)
-		{
-			// swap scene
-		}
-		else
-		{
-			++currentImage;
-		}
-		
+		notClearScreen = false;
 	}
-	else if (timeToReveal(deltaTime))
+	
+	if (currentImage == imageCounter)
 	{
-		moveImage(&imageObj[currentImage]);
-		imageObj[currentImage].update(gEngine,deltaTime);
-		++clearCounter;
+		printf("final score: %d\n",totalPoints);
+		gEngine->changeGameState(endGame);
 	}
+	else
+	{
 		
+		if (clearCounter == clearTime - 1)
+		{
+			printf("failed this one\n");
+			pointLeft = 12;
+			// also reset clip
+			clearCounter = 0;
+			currentTime = 0;
+		
+			SDL_SetRenderDrawColor(gEngine->getRenderer(),0x00,0x00,0x00,0x00);
+			SDL_RenderClear(gEngine->getRenderer());
+			
+			++currentImage;
+			printf("image auto update to %d\n",currentImage);
+		}
+		else if (timeToReveal(deltaTime))
+		{			
+			moveImage(&imageObj[currentImage]);
+			imageObj[currentImage].update(gEngine,deltaTime);
+			++clearCounter;
+			--pointLeft;		
+		}
+	}
+	   		
 	SDL_RenderPresent(gEngine->getRenderer());
 }
 

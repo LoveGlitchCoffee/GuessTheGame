@@ -35,19 +35,22 @@ void button::update(engine* gEngine, float deltaTime)
 		if (hoverFunc != nullptr)
 			hoverFunc(this);		
 	}
-	
-	if (gEngine->event()->type == SDL_MOUSEBUTTONUP)
+
+	if (gEngine->event()->type == SDL_MOUSEBUTTONDOWN)
 	{
-		bool clicked = false;;
-		
+		clicked = true;
+	}
+	
+	if (gEngine->event()->type == SDL_MOUSEBUTTONUP && clicked == true)
+	{		
 		int mouseX,mouseY;
 		SDL_GetMouseState(&mouseX,&mouseY);
 
 		if (withinBoundary(mouseX,mouseY))
-			clicked = true;
-		   
-		if (clicked)
+		{
 			callbackFunc(gEngine);
+			clicked = false;
+		}							
 	}
 
 	for (auto &it : subComponents)
