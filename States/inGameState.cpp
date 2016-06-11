@@ -120,6 +120,7 @@ void inGameState::handleInput(engine* gEngine, float deltaTime)
 			case SDLK_SPACE:
 			{
 				totalPoints += pointLeft;
+				printf("total points after got right: %d\n", totalPoints);
 				pointLeft = 12;
 				// also reset clip
 				clearCounter = 0;
@@ -136,6 +137,7 @@ void inGameState::handleInput(engine* gEngine, float deltaTime)
 			{
 				clearCounter = 0;
 				currentTime = 0;
+				pointLeft = 12;
 		
 				SDL_SetRenderDrawColor(gEngine->getRenderer(),0x00,0x00,0x00,0x00);
 				SDL_RenderClear(gEngine->getRenderer());
@@ -203,7 +205,8 @@ void inGameState::update(engine* gEngine, float deltaTime)
 			moveImage(imageObj[currentImage]);
 			imageObj[currentImage]->update(gEngine,deltaTime);
 			++clearCounter;			
-			--pointLeft;		
+			--pointLeft;
+			//printf("points left this round: %d\n",pointLeft);
 		}
 	}
 	   		

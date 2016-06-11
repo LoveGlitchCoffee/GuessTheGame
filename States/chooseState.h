@@ -45,6 +45,36 @@ private:
 	gameObject stealth;
 	static void chosenStealth(engine* gEngine);
 
+	gameObject platformerText;
+	gameObject platformer;
+	static void chosenPlatformer(engine* gEngine);
+
+	gameObject arpgText;
+	gameObject arpg;
+	static void chosenARPG(engine* gEngine);
+
+	gameObject strategyText;
+	gameObject strategy;
+	static void chosenStrategy(engine* gEngine);
+
+	gameObject fightingText;
+	gameObject fighting;
+	static void chosenFighting(engine* gEngine);
+	
+	gameObject racingText;
+	gameObject racing;
+	static void chosenRacing(engine* gEngine);
+
+	gameObject simulatorText;
+	gameObject simulator;
+	static void chosenSimulator(engine* gEngine);
+
+	gameObject puzzleText;
+	gameObject puzzle;
+	static void chosenPuzzle(engine* gEngine);
+
 	bool canUpdate;
+
+	string iconFolder;
 	
 };
