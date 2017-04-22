@@ -14,6 +14,11 @@ chooseState::chooseState(engine* gEngine)
 	init(gEngine);
 }
 
+void chooseState::createMenuItem(string iconPath, string label)
+{
+    
+}
+
 void chooseState::init(engine* gEngine)
 {
 	int space;
@@ -201,6 +206,24 @@ void chooseState::init(engine* gEngine)
 
     puzzleText.x = puzzle.x;
     puzzleText.y = puzzle.y - space;
+
+	// example
+
+	sprite* folderSprite10  = new sprite(iconFolder + "example-icon.png",gEngine->getRenderer());
+	
+	button* exampleBut = new button(folderSprite10, chosenExample);
+    exampleBut->setHoverCallback(hoverOver);
+	
+    example.addComponent(exampleBut);
+
+    example.x = gEngine->screenWidth() / 5 * 4;
+    example.y = gEngine->screenHeight() / 4 * 3;
+
+	textSprite* exampleT = new textSprite("Example",font,col,gEngine->getRenderer());
+    exampleText.addComponent(exampleT);
+
+    exampleText.x = example.x;
+    exampleText.y = example.y - space;
 }
 
 void chooseState::handleInput(engine* gEngine, float deltaTime)
@@ -243,11 +266,17 @@ void chooseState::update(engine* gEngine, float deltaTime)
     racingText.update(gEngine,deltaTime);
 	racing.update(gEngine,deltaTime);
 
-    puzzleText.update(gEngine,deltaTime);
-    puzzle.update(gEngine,deltaTime);
+    exampleText.update(gEngine,deltaTime);
+    example.update(gEngine,deltaTime);
 
     simulatorText.update(gEngine,deltaTime);
     simulator.update(gEngine,deltaTime);
+
+    puzzleText.update(gEngine,deltaTime);
+    puzzle.update(gEngine,deltaTime);
+
+	exampleText.update(gEngine,deltaTime);
+	example.update(gEngine,deltaTime);
 	
 	SDL_RenderPresent(gEngine->getRenderer());
 }
@@ -257,6 +286,16 @@ void chooseState::chosenRogue(engine* gEngine)
 	inGameState* inG = (inGameState*) gEngine->getState(inGame);
 
 	inG->setPath("roguelike-lite");
+	inG->init(gEngine);
+	
+	gEngine->changeGameState(inGame);
+}
+
+void chooseState::chosenExample(engine* gEngine)
+{
+	inGameState* inG = (inGameState*) gEngine->getState(inGame);
+
+	inG->setPath("example");
 	inG->init(gEngine);
 	
 	gEngine->changeGameState(inGame);

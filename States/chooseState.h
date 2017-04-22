@@ -26,6 +26,8 @@ public:
 	string getFolderName();
 	
 private:
+
+    void createMenuItem(string iconPath, string label);
    
 	static void hoverOver(button* folder);
 
@@ -72,6 +74,10 @@ private:
 	gameObject puzzleText;
 	gameObject puzzle;
 	static void chosenPuzzle(engine* gEngine);
+
+	gameObject exampleText;
+	gameObject example;
+	static void chosenExample(engine* gEngine);
 
 	bool canUpdate;
 
