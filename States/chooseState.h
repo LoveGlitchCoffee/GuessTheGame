@@ -1,5 +1,7 @@
 #pragma once
 
+#include <unordered_map>
+
 #include "../States/inGameState.h"
 #include "../GameEngine/engine.h"
 #include "../GameEngine/gameState.h"
@@ -27,60 +29,36 @@ public:
 	
 private:
 
-    void createMenuItem(string iconPath, string label);
-   
-	static void hoverOver(button* folder);
+    std::string labels[11];
+    
+    std::unordered_map<std::string, gameObject*> labelTable;
+    std::unordered_map<std::string, gameObject*> buttonTable;
 
+    void createMenuItem(string iconPath, string label, void(*callback)(engine*), int x, int y);
+   
+	static void hoverOver(button* folder);    
 
 	TTF_Font* font;
 	SDL_Color col = {0,0,0,255};
 
-	gameObject rogueText;
-	gameObject rogue;
+    static void coreCallback(engine* gEngine, std::string ingamePath);
+
 	static void chosenRogue(engine* gEngine);
-
-	gameObject rpgText;
-	gameObject rpgs;
 	static void chosenRPG(engine* gEngine);
-
-	gameObject stealthText;
-	gameObject stealth;
 	static void chosenStealth(engine* gEngine);
-
-	gameObject platformerText;
-	gameObject platformer;
 	static void chosenPlatformer(engine* gEngine);
-
-	gameObject arpgText;
-	gameObject arpg;
 	static void chosenARPG(engine* gEngine);
-
-	gameObject strategyText;
-	gameObject strategy;
 	static void chosenStrategy(engine* gEngine);
-
-	gameObject fightingText;
-	gameObject fighting;
 	static void chosenFighting(engine* gEngine);
-	
-	gameObject racingText;
-	gameObject racing;
 	static void chosenRacing(engine* gEngine);
-
-	gameObject simulatorText;
-	gameObject simulator;
 	static void chosenSimulator(engine* gEngine);
-
-	gameObject puzzleText;
-	gameObject puzzle;
 	static void chosenPuzzle(engine* gEngine);
-
-	gameObject exampleText;
-	gameObject example;
 	static void chosenExample(engine* gEngine);
 
 	bool canUpdate;
 
 	string iconFolder;
+
+    engine* engineRef;
 	
 };
