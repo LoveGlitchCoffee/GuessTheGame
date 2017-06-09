@@ -43,7 +43,7 @@ void chooseState::init(engine* gEngine)
 	iconFolder = "images/icons/";
     engineRef = gEngine;
 
-    int maxX = 3;
+    int maxX = 4;
     int maxY = 3;
 
     // all the following arrays must be corresponding in order, only ever need to update hese lists
@@ -57,6 +57,7 @@ void chooseState::init(engine* gEngine)
                                "race-icon",
                                "simulator-icon",
                                "puzzle-icon",
+                               "open-world-icon",
                                "example-icon"};
     
     labels[0] = "Roguelike-lite";
@@ -69,26 +70,28 @@ void chooseState::init(engine* gEngine)
     labels[7] = "Racing";
     labels[8] = "Simulator";
     labels[9] = "Puzzle";
-    labels[10] = "Example";
+    labels[10] = "'Open World'";
+    labels[11] = "Example";
 
     typedef void (*array_of_callbacks)(engine*);
     array_of_callbacks buttonCallbacks[] = {chosenRogue,
                                             chosenRPG,
                                             chosenStealth,
                                             chosenPlatformer,
+                                            chosenFighting,
                                             chosenARPG,
                                             chosenStrategy,
-                                            chosenFighting,
                                             chosenRacing,
                                             chosenSimulator,
                                             chosenPuzzle,
+                                            chosenOpenWorld,
                                             chosenExample};
 
     int categoryCounter = 0;
     
-    for (int y = 1; y <= maxX; y++)
+    for (int y = 1; y <= maxY; y++)
     {
-        for (int x = 1; x <= maxY; x++)
+        for (int x = 1; x <= maxX; x++)
         {
             createMenuItem(iconPaths[categoryCounter], labels[categoryCounter], buttonCallbacks[categoryCounter], x, y);
             categoryCounter++;
@@ -186,6 +189,11 @@ void chooseState::chosenARPG(engine* gEngine)
 void chooseState::chosenStrategy(engine* gEngine)
 {
     coreCallback(gEngine, "strategy");
+}
+
+void chooseState::chosenOpenWorld(engine* gEngine)
+{
+    coreCallback(gEngine, "openworld");
 }
 
 void chooseState::hoverOver(button* folder)

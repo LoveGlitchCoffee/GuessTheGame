@@ -29,7 +29,7 @@ public:
 	
 private:
 
-    std::string labels[11];
+    std::string labels[12];
     
     std::unordered_map<std::string, gameObject*> labelTable;
     std::unordered_map<std::string, gameObject*> buttonTable;
@@ -53,7 +53,8 @@ private:
 	static void chosenRacing(engine* gEngine);
 	static void chosenSimulator(engine* gEngine);
 	static void chosenPuzzle(engine* gEngine);
-	static void chosenExample(engine* gEngine);
+    static void chosenOpenWorld(engine* gEngine);
+	static void chosenExample(engine* gEngine);    
 
 	bool canUpdate;
 
